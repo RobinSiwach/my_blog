@@ -6,10 +6,4 @@ weight: 1
 pre: "<b>1. </b>"
 ---
 
-### Chapter 1
-
-# OBJECT ORIENTED PROGRAMMING
-
----
-
-Basics of Classes and Objects.
+*Give someone a program, you frustrate them for a day; teach them how to program, you frustrate them for a lifetime.*

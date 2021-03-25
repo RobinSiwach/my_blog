@@ -6,6 +6,7 @@ weight: 2
 pre: "<b>2. </b>"
 ---
 
-### Chapter 1
+*Concurrency is dealing with a lot of things at once. Parallelism is doing a lot of things at once.*
 
-# BASICS OF COMPUTER ARCHITECTURE
+---
+*- Rob Pike*

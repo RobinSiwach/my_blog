@@ -3,6 +3,8 @@ languageCode = "en-us"
 title = "My New Hugo Site"
 theme = "hugo-theme-learn"
 [params]
+    disableSearch = true
+    landingPageURL = "/"
     themeVariant = "green"
 [markup]
     [markup.highlight]
