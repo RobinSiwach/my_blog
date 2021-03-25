@@ -1,7 +1,6 @@
 ---
 title: "Redis"
 date: 2021-03-18T11:54:16+05:30
-draft: true
 weight: 1
 ---
 

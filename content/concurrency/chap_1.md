@@ -2,7 +2,6 @@
 title: "Parallel Computing"
 menutitle : "Parallel Computing"
 date: 2020-09-26T00:52:23+05:30
-draft: true
 weight: 1
 ---
 

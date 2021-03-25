@@ -1,7 +1,6 @@
 ---
 title: "Class Variables"
 date: 2020-09-24T03:20:30+05:30
-draft: true
 weight: 2
 ---
 

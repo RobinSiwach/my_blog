@@ -2,7 +2,6 @@
 title: "Classes and Instances(Objects)"
 menutitle: "Classes and Objects"
 date: 2020-09-24T03:07:30+05:30
-draft: true
 weight: 1
 ---
 

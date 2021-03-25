@@ -1,7 +1,6 @@
 ---
 title: "Threads and Processes"
 date: 2020-09-26T01:12:55+05:30
-draft: true
 weight: 2
 ---
 

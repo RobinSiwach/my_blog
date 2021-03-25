@@ -2,7 +2,6 @@
 title: "Special(Magic_Dunder) Methods"
 menutitle: "Magic Methods"
 date: 2020-09-24T03:20:38+05:30
-draft: true
 weight: 5
 ---
 
