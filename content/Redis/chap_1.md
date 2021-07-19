@@ -5,8 +5,6 @@ weight: 1
 ---
 
 
-
-
 ## Strings
 
 
@@ -139,47 +137,47 @@ b'That is a string'
 
 
 
-#### Create
+Create
 
 `rpush` : It will create the list. If it already exists, then it will append the items to the list
 
-#### Fetch 
+Fetch 
 
 1. `lrange` : 
 
-   To fetch the whole list
+    To fetch the whole list
 
-   ```foo
-   lrange list_name 0 -1
-   ```
+    ```foo
+    lrange list_name 0 -1
+    ```
 
-   To fetch first 5 items
+    To fetch first 5 items
 
-   ```foo
-   lrange list_name 0 4
-   ```
+    ```foo
+    lrange list_name 0 4
+    ```
 
-   Unlike python, it does include the last item of the mentioned index.
+    Unlike python, it does include the last item of the mentioned index.
 
-   
+    
 
-   To fetch item of a specific index, if the index doesn't exist it'll give empty array
+    To fetch item of a specific index, if the index doesn't exist it'll give empty array
 
-   ```foo
-   lrange list_name 4 4
-   ```
+    ```foo
+    lrange list_name 4 4
+    ```
 
 2. `llen` : gives the length of the list
 
 3. `lindex` : gives the element by its index
 
-   ```foo
-   lindex a 2
-   ```
+    ```foo
+    lindex a 2
+    ```
 
 
 
-#### Update
+Update
 
 
 
@@ -188,37 +186,37 @@ b'That is a string'
 
 
 
-#### Delete
+Delete
 
 
 
 1. `lpop` : remove elements from the left of the list.
 
-   ```foo
-   lpop a
-   ```
+    ```foo
+    lpop a
+    ```
 
-   By default it only removes single element from the list
+    By default it only removes single element from the list
 
-   ```foo
-   lpop a 2
-   ```
+    ```foo
+    lpop a 2
+    ```
 
-   If we mention the count, it will remove that much elements from the list.
+    If we mention the count, it will remove that much elements from the list.
 
 2. `rpop` : remove elements from the right of the list
 
-   ```foo
-   rpop a
-   ```
+    ```foo
+    rpop a
+    ```
 
-   By default it only removes single element from the list
+    By default it only removes single element from the list
 
-   ```foo
-   rpop a 2
-   ```
+    ```foo
+    rpop a 2
+    ```
 
-   If we mention the count, it will remove that much elements from the list.
+    If we mention the count, it will remove that much elements from the list.
 
 
 
@@ -267,7 +265,7 @@ Python implementation of rpop and lpop only deletes one element at a time for so
 
 
 
-#### Create/Update : 
+Create/Update : 
 
 1. `hmset/hset` : create the hash/ updates the hash
 
@@ -285,52 +283,63 @@ Fetch :
 
 
 
-#### Delete : 
+Delete : 
 
 1. `hdel`
 
 ```foo
-127.0.0.1:6379> hset details name "Patrick Jane" alias Mentalist location Sacramento country "United States"
-(integer) 4
+127.0.0.1:6379> hmset details name rs alias albatross location Neuss country Germany
+OK
 127.0.0.1:6379> hgetall details
 1) "name"
-2) "Patrick Jane"
+2) "rs"
 3) "alias"
-4) "Mentalist"
+4) "albatross"
 5) "location"
-6) "Sacramento"
+6) "Neuss"
 7) "country"
-8) "United States"
+8) "Germany"
 127.0.0.1:6379> hget details name
-"Patrick Jane"
-127.0.0.1:6379> hget details alias
-"Mentalist"
-127.0.0.1:6379> hmget details alias location
-1) "Mentalist"
-2) "Sacramento"
+"rs"
+127.0.0.1:6379> hexists details alias
+(integer) 1
+127.0.0.1:6379> hmget details name location
+1) "rs"
+2) "Neuss"
 127.0.0.1:6379> hvals details
-1) "Patrick Jane"
-2) "Mentalist"
-3) "Sacramento"
-4) "United States"
+1) "rs"
+2) "albatross"
+3) "Neuss"
+4) "Germany"
 127.0.0.1:6379> hkeys details
 1) "name"
 2) "alias"
 3) "location"
 4) "country"
-127.0.0.1:6379> hset details name Leonard city Pasadena
-(integer) 1
+127.0.0.1:6379> hmset details name robin city Dusseldorf
+OK
 127.0.0.1:6379> hgetall details
  1) "name"
- 2) "Leonard"
+ 2) "robin"
  3) "alias"
- 4) "Mentalist"
+ 4) "albatross"
  5) "location"
- 6) "Sacramento"
+ 6) "Neuss"
  7) "country"
- 8) "United States"
+ 8) "Germany"
  9) "city"
-10) "Pasadena"
+10) "Dusseldorf"
+127.0.0.1:6379> hdel details name
+(integer) 1
+127.0.0.1:6379> hgetall details
+1) "alias"
+2) "albatross"
+3) "location"
+4) "Neuss"
+5) "country"
+6) "Germany"
+7) "city"
+8) "Dusseldorf"
 ```
 
 
@@ -343,10 +352,10 @@ import redis
 r = redis.Redis()
 
 info = {
-	'name' : 'rs',
-	'alias' : 'albatross',
-	'location' : 'Neuss',
-	'country' : 'Germany'
+   'name' : 'rs',
+   'alias' : 'albatross',
+   'location' : 'Neuss',
+   'country' : 'Germany'
 }
 
 print(r.hset("details",mapping=info))
@@ -363,38 +372,379 @@ print(r.hgetall("details"))
 ```foo
 OUTPUT : 
 
-4
-{b'name': b'Patrick Jane', b'alias': b'Mentalist', b'location': b'Sacramento', b'country': b'United States'}
-b'Patrick Jane'
+0
+{b'alias': b'albatross', b'location': b'Neuss', b'country': b'Germany', b'city': b'Dusseldorf', b'name': b'rs', b'surname': b'siwach'}
+b'rs'
 True
-[b'Patrick Jane', b'Sacramento']
-[b'Patrick Jane', b'Mentalist', b'Sacramento', b'United States']
-[b'name', b'alias', b'location', b'country']
-1
-{b'name': b'Leonard', b'alias': b'Mentalist', b'location': b'Sacramento', b'country': b'United States', b'city': b'Pasadena'}
+[b'rs', b'Neuss']
+[b'albatross', b'Neuss', b'Germany', b'Dusseldorf', b'rs', b'siwach']
+[b'alias', b'location', b'country', b'city', b'name', b'surname']
+0
+{b'alias': b'albatross', b'location': b'Neuss', b'country': b'Germany', b'city': b'Dusseldorf', b'name': b'robin', b'surname': b'siwach'}
 ```
 
 
 
 
 
+## Sets
+
+
+
+Create : 
+
+1. `sadd` : create/append
+
+Fetch : 
+
+1. `smembers` : fetch the elements
+2. `scard` : Returns total no of elements
+
+Diff
+
+1. `sdiff` : gives difference of set
+2. `sdiffstore` : stores difference in third set
+
+Union
+
+1. `sunion` : gives union of sets
+2. `sunionstore` : stores union in third set
+
+Intersection
+
+1. `sinter`  : gives intersection of the sets
+2. `sinterstore` : stores intersection into the third set
+
+Delete
+
+1. `srem`  : removes element from the set
+
+Move
+
+1. `smove` : moves element from one set to another
 
 
 
 
 
+```foo
+127.0.0.1:6379> sadd myset 10 20 30 40
+(integer) 4
+127.0.0.1:6379> smembers myset
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> sadd myset 30
+(integer) 0
+127.0.0.1:6379> smembers myset
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> sadd myset 50
+(integer) 1
+127.0.0.1:6379> smembers myset
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+127.0.0.1:6379> scard myset 
+(integer) 5
+127.0.0.1:6379> sadd myset2 40 50 60 70 80
+(integer) 5
+127.0.0.1:6379> smembers myset2
+1) "40"
+2) "50"
+3) "60"
+4) "70"
+5) "80"
+127.0.0.1:6379> sdiff myset myset2
+1) "10"
+2) "20"
+3) "30"
+127.0.0.1:6379> sdiffstore myset3 myset myset2
+(integer) 3
+127.0.0.1:6379> smembers myset3
+1) "10"
+2) "20"
+3) "30"
+127.0.0.1:6379> sunion myset myset2
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+6) "60"
+7) "70"
+8) "80"
+127.0.0.1:6379> sunionstore myset4 myset myset2
+(integer) 8
+127.0.0.1:6379> smembers myset4
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+6) "60"
+7) "70"
+8) "80"
+127.0.0.1:6379> srem myset4 80
+(integer) 1
+127.0.0.1:6379> smembers myset4
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+6) "60"
+7) "70"
+127.0.0.1:6379> srem myset4 70 60 50
+(integer) 3
+127.0.0.1:6379> smembers myset4
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> smembers myset
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+6) "60"
+7) "70"
+8) "80"
+127.0.0.1:6379> smembers myset4
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> sinter myset myset4
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> sinterstore myset5 myset myset4
+(integer) 4
+127.0.0.1:6379> smembers myset5
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+127.0.0.1:6379> smove myset myset5 80
+(integer) 1
+127.0.0.1:6379> smembers myset
+1) "10"
+2) "20"
+3) "30"
+4) "40"
+5) "50"
+6) "60"
+7) "70"
+
+```
+
+
+
+#### Python Implementation
+
+```python
+import redis
+
+r = redis.Redis()
+
+print(r.sadd('myset','10'))
+print(r.sadd('myset','20'))
+print(r.sadd('myset','30'))
+print(r.sadd('myset','40'))
+print(r.smembers('myset'))
+print(r.sadd('myset',30))
+print(r.smembers('myset'))
+print(r.sadd('myset',50))
+print(r.smembers('myset'))
+print(r.scard('myset'))
+print(r.sadd('myset2','40'))
+print(r.sadd('myset2','50'))
+print(r.sadd('myset2','60'))
+print(r.sadd('myset2','70'))
+print(r.sadd('myset2','80'))
+print(r.smembers('myset2'))
+print(r.sdiff('myset','myset2'))
+print(r.sdiffstore('myset3','myset','myset2'))
+print(r.smembers('myset3'))
+print(r.sunion('myset','myset2'))
+print(r.sunionstore('myset4','myset','myset2'))
+print(r.smembers('myset4'))
+print(r.srem('myset4',80))
+print(r.smembers('myset4'))
+print(r.sinter('myset','myset4'))
+print(r.sinterstore('myset5','myset','myset4'))
+
+```
+
+```foo
+OUTPUT : 
+
+1
+1
+1
+1
+{b'20', b'30', b'40', b'10'}
+0
+{b'20', b'30', b'40', b'10'}
+1
+{b'20', b'30', b'40', b'50', b'10'}
+5
+1
+1
+1
+1
+1
+{b'60', b'40', b'80', b'70', b'50'}
+{b'20', b'30', b'10'}
+3
+{b'20', b'30', b'10'}
+{b'20', b'30', b'40', b'60', b'80', b'70', b'50', b'10'}
+8
+{b'20', b'30', b'40', b'60', b'80', b'70', b'50', b'10'}
+1
+{b'20', b'30', b'40', b'60', b'70', b'50', b'10'}
+{b'20', b'30', b'40', b'50', b'10'}
+5
+```
 
 
 
 
 
+## Sorted Sets
+
+
+
+Each set member is assigned a numerical value score. Members are sorted on the basis of score.
 
 
 
 
 
+1. `zadd` : Create/append 
+2. `zrange` : list members using range
+3. `zcard` : returns total no of elements in the sortedset
+4. `zcount` : returns no of elements between range 
+5. `zrem` : removes element from the set
+6. `zrank` : gives index of the member
+7. `zrevrank` : provides the reverse rank
+8. `zscore` : provides the score of the member
+9. `zrangebyscore` : gives elements by score range
 
 
+
+Same score can be assigned to be multiple elements.
+
+
+
+```foo
+127.0.0.1:6379> zadd myset 1 a 2 b 3 c 5 d
+(integer) 4
+127.0.0.1:6379> zrange myset 0 -1
+1) "a"
+2) "b"
+3) "c"
+4) "d"
+127.0.0.1:6379> zadd myset 100 e
+(integer) 1
+127.0.0.1:6379> zrange myset 0 -1
+1) "a"
+2) "b"
+3) "c"
+4) "d"
+5) "e"
+127.0.0.1:6379> zcard myset
+(integer) 5
+127.0.0.1:6379> zcount myset 1 3
+(integer) 3
+127.0.0.1:6379> zcount myset 1 101
+(integer) 5
+127.0.0.1:6379> zcount myset 1 100
+(integer) 5
+127.0.0.1:6379> zcount myset 1 99
+(integer) 4
+127.0.0.1:6379> zrem myset b
+(integer) 1
+127.0.0.1:6379> zrank myset a
+(integer) 0
+127.0.0.1:6379> zrank myset e
+(integer) 3
+127.0.0.1:6379> zrevrank myset a
+(integer) 3
+127.0.0.1:6379> zrevrank myset e
+(integer) 0
+127.0.0.1:6379> zscore myset a
+"1"
+127.0.0.1:6379> zscore myset d
+"5"
+127.0.0.1:6379> zscore myset e
+"100"
+```
+
+
+
+#### Python Implementation
+
+
+
+```python
+import redis
+
+r = redis.Redis()
+d = {
+   'a' : 1,
+   'b' : 2,
+   'c' : 3,
+   'd' : 5
+}
+
+print(r.zadd('myset',mapping=d))
+
+print(r.zrange('myset',0,-1))
+print(r.zadd('myset',mapping={'e' : 100}))
+print(r.zrange('myset',0,-1))
+print(r.zcard('myset'))
+print(r.zcount('myset',1,3))
+print(r.zcount('myset',1,101))
+print(r.zcount('myset',1,99))
+print(r.zrem('myset','b'))
+print(r.zrank('myset','a'))
+print(r.zrank('myset','e'))
+print(r.zrevrank('myset','a'))
+print(r.zrevrank('myset','e'))
+print(r.zscore('myset','a'))
+print(r.zscore('myset','d'))
+print(r.zscore('myset','e'))
+```
+
+```foo
+OUTPUT : 
+
+1
+[b'a', b'b', b'c', b'd', b'e']
+0
+[b'a', b'b', b'c', b'd', b'e']
+5
+3
+5
+4
+1
+0
+3
+3
+0
+1.0
+5.0
+100.0
+```
 
 
 

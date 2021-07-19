@@ -301,3 +301,244 @@ Now that we've got the Docker flow in mind let's talk about running steps in doc
 * ​	Don't let your containers fetch your dependencies when they start. If you're using something like `Node.js` and you have your node starts up when the container starts it fetches it's dependencies. Then, someday somebody's gonna remove some library from node repos and suddenly everything stops working. Make your containers include dependencies inside them, saves a lot of pain.
 * Don't leave important things in unnamed stopped containers. 
 
+
+## Exposing Ports
+
+
+
+Docker offers a wide variety of options to connect containers together and connect containers to the internet. 
+
+* For connecting them together, it offers private networks where you can put each container on a network and they can talk to each other, but still be isolated from the rest of the containers running on your computer. 
+
+* For getting data into and out of the system as a whole, Docker offers the option of exposing a port or publishing a port. That makes the port accessible from outside the machine on which docker is being hosted.
+
+    ```foo
+    docker run --rm -ti -p CONTAINER_PORT:OUTSIDE_HOST_MACHINE_PORT --name CONTAINER_NAME
+    ```
+
+    If we don't mention the host machine port then docker will choose a random port. We can check the ports assigned of the container using
+
+    ```foo
+    docker port CONTAINER_NAME
+    ```
+
+* If we want to mention the protocol such `tcp` or `udp` then we can do it like this
+
+    ```foo
+    docker run --rm -ti -p CONTAINER_PORT:OUTSIDE_HOST_MACHINE_PORT/PROTOCOL CONTAINER_NAME
+    ```
+
+
+
+
+
+
+## Container Networking
+
+
+
+When we expose a container's port in docker, it creates a path from essentially, the outside of that machine down through networking layers and into that container. That's very well and other containers can connect to it by going out to the host, turning around, and coming back in along that path. It's useful but there are more efficient ways to go about it. 
+
+
+
+Docker offers an extensive set of networking options to connect containers with each other. 
+
+
+
+To check existing networks, we see three networks by default
+
+```foo
+docker network ls
+```
+
+```foo
+OUTPUT :
+
+NETWORK ID     NAME      DRIVER    SCOPE
+3ce38069cd9c   bridge    bridge    local
+e08529dd4dd2   host      host      local
+833eb8d13090   none      null      local
+```
+
+
+
+* `bridge` is used by the containers that don't specify a preference to be put into any other network.
+* `host` is when you want a container to not have any network isolation at all. This does have some security concerns.
+* `none` is for a container when it should have no networking.
+
+
+
+To create a network
+
+```foo
+docker network create learning
+```
+
+
+
+> Names are very useful when using private networks in Docker, because different containers inside the network can refer to each other by those names, so it makes it very easy for them to find each other. 
+
+
+
+To define network while creating container use `--net ` option
+
+```foo
+docker run --rm -ti --net NETWORK_NAME --name CONTAINER_NAME ubuntu bash
+```
+
+To connect a container to a network after creation
+
+```foo
+docker network connect NETWORK_NAME CONTAINER_NAME
+```
+
+
+
+## Images
+
+
+
+To list images
+
+```foo
+docker images
+```
+
+```foo
+OUTPUT : 
+
+redis        latest    cc69ae189a1a   8 weeks ago    105MB
+alpine       latest    e50c909a8df2   2 months ago   5.61MB
+postgres     latest    4ea2949e4cb8   2 months ago   314MB
+ubuntu       16.04     8185511cd5ad   3 months ago   132MB
+ubuntu       latest    f63181f19b2f   3 months ago   72.9MB
+ubuntu       18.04     c090eaba6b94   3 months ago   63.3MB
+mysql        latest    c8562eaf9d81   3 months ago   546MB
+ubuntu       14.04     df043b4f0cf1   7 months ago   197MB
+```
+
+
+
+As these images share a lot of underlying data, you don't sum up the size of these images to get the total space docker is using. Docker is much more space efficient than it would look like
+
+
+
+To tag images : 
+
+* `docker commit` tags images for you
+
+* This is an example of name structure for naming the images
+
+    ```foo
+    registry.example.com:port/organization/image-name:version-tag
+    ```
+
+    We can leave out the parts we don't need.
+
+    Usually `Organization/image-name` is often enough
+
+    
+
+Getting images : 
+
+* `docker pull`
+* Run automatically by `docker run`
+* Useful for offline work
+* Opposite : `docker push`
+
+
+
+Cleaning Images : 
+
+* Images can accumulate quickly
+
+    `docker rmi image-name:tag`
+
+    `docker rmi image-id`
+
+
+
+## Volumes
+
+
+
+Volumes are sort of like shared folders, they're virtual discs that you can store data in and share them between the containers and between containers and the host, or both. 
+
+So there are two main varieties of volumes.
+
+* Persistent : You can put data there and it will be available on the host, and when container goes away, the data will still be there. 
+* Ephemeral : These exist as long as container is using them, but when no container is using them, they evaporate. So they're sort of ephemeral, they'll stick around as long as they're being used, but they're not permanent. 
+
+
+
+These are not part of images, no part of volumes will be included when you download/upload an image. They're for your local data, local to the host.
+
+
+
+#### Sharing data with the host
+
+Make a folder in your home directory named `example` and put some files in there. And run the given command
+
+```foo
+docker run --rm -ti -v ~/example:/shared-folder ubuntu:14.04 bash
+```
+
+
+
+When we'll run the container the `shared-folder` in root directory will have those files and if we'll create new files in `shared-folder` it'll automatically reflect in example immediately and vice versa is also true. Both folders are in sync state and any change in one will be reflected in the other folder. 
+
+
+
+#### Sharing data between containers
+
+
+
+First create a container and create a volume like this
+
+```foo
+docker run --rm -ti -v /shared-data --name rdb ubuntu:14.04 bash
+```
+
+
+
+Then create one more container and use that shared volume using `--volumes-from ` param
+
+```foo
+docker run --rm -ti --volumes-from rdb --name rdb2 ubuntu:14.04 bash
+```
+
+
+
+Both the containers will have the directory named `shared-data` and any change in directory in one container will automatically be reflected in other container.
+
+
+
+And as we exit all the containers, it's gone.
+
+
+
+## Docker Files
+
+
+
+Docker files are small programs designed to describe how to build a docker image. 
+
+You run these programs with
+
+```foo
+docker build -t name-of-result .
+```
+
+
+
+* So each step produces a new image. It's got a series of steps, start with one image, make a container out of it, run something in it, make a new image. The previous image is unchanged, it just starts from that, make a new one with some changes in it. 
+* The state is not carried forward from line to line. If you start a program on one line, it only runs for the duration of that line. 
+* So as a result if your build process is download a large file, do something with it, and delete it, if you do all that in one line, then resulting image will only have result of that. 
+* If you download it in one line, it will get saved into an image. The next line will have that image saved there, and the space occupied by your big downloaded file will be carried all the way through and your docker file can get pretty big. 
+
+
+
+* In Docker file, caching is done at each step. If we re run the file, it will only re run the steps changed and steps after that. 
+* Processes you start on one line, will not be running on the next line. You run them, they run for the duration of that container, then that container gets shut down, saved into an image, and you have a fresh start on the next line. 
+* Environment variables do persist across line if you use `ENV` command to set them.
+* Just remember that each line is its own call to `docker run` and then its own call to `docker commit`
