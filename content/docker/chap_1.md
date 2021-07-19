@@ -296,12 +296,6 @@ Now that we've got the Docker flow in mind let's talk about running steps in doc
 
 
 
-## *IMPORTANT LESSONS FROM EXPERIENCE* 
-
-* ​	Don't let your containers fetch your dependencies when they start. If you're using something like `Node.js` and you have your node starts up when the container starts it fetches it's dependencies. Then, someday somebody's gonna remove some library from node repos and suddenly everything stops working. Make your containers include dependencies inside them, saves a lot of pain.
-* Don't leave important things in unnamed stopped containers. 
-
-
 ## Exposing Ports
 
 
@@ -542,3 +536,9 @@ docker build -t name-of-result .
 * Processes you start on one line, will not be running on the next line. You run them, they run for the duration of that container, then that container gets shut down, saved into an image, and you have a fresh start on the next line. 
 * Environment variables do persist across line if you use `ENV` command to set them.
 * Just remember that each line is its own call to `docker run` and then its own call to `docker commit`
+
+
+## *IMPORTANT LESSONS FROM EXPERIENCE* 
+
+* ​ Don't let your containers fetch your dependencies when they start. If you're using something like `Node.js` and you have your node starts up when the container starts it fetches it's dependencies. Then, someday somebody's gonna remove some library from node repos and suddenly everything stops working. Make your containers include dependencies inside them, saves a lot of pain.
+* Don't leave important things in unnamed stopped containers. 
