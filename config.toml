@@ -1,4 +1,4 @@
-baseURL = ""
+baseURL = "/"
 languageCode = "en-us"
 title = "Robin ke kaagzad"
 theme = "hugo-theme-learn"
