@@ -3,9 +3,15 @@ languageCode = "en-us"
 title = "Robin ke kaagzad"
 theme = "hugo-theme-learn"
 [params]
-    disableSearch = true
+    author = "Robin Siwach"
+    disableSearch = false
+    disableLandingPage = false
     landingPageURL = "/"
+    landingPageName = "<i class='fas fa-home'></i> Home"
     themeVariant = "green"
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
 [markup]
     [markup.highlight]
         anchorLineNos = false

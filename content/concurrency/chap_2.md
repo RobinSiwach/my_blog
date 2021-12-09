@@ -6,7 +6,7 @@ weight: 2
 
 ## Process
 
-*  ***When a computer runs an application, that instance of program executing is referred to as a thread.***
+*  ***When a computer runs an application, that instance of program executing is referred to as a process.***
 *  A process consists of program's code, data and its information about its state. Each process is independent and has its own address space and memory.
 *  A computer can have hundreds of active processes and an operating system's job is to manage all of them.
 
