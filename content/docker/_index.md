@@ -2,8 +2,8 @@
 title: "Docker"
 date: 2021-03-25T15:20:03+05:30
 # chapter: true
-weight: 5
-pre: "<b>5. </b>"
+weight: 4
+pre: "<b>4. </b>"
 ---
 
 
